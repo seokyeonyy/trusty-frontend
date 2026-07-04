@@ -45,6 +45,8 @@ function App() {
 
         {/* 5. 상단 Navbar 네비게이션에서 연결되는 피싱 이력 조회 페이지 경로 */}
         <Route path="/search-history" element={<SearchHistoryPage />} />
+
+        <Route path="/main" element={<MainAnalysisPage />} />
       </Routes>
     </Router>
   )

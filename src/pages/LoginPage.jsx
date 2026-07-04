@@ -16,7 +16,7 @@ function LoginPage() {
     try {
       setError('');
       await login(email, password);
-      navigate('/main'); // 실제 이동할 페이지 경로로 필요시 수정
+      navigate('/main'); // 실제 이동 경로에 맞게 수정
     } catch (err) {
       setError(err.message);
     }
@@ -36,8 +36,8 @@ function LoginPage() {
               <circle cx="12" cy="7" r="4" />
             </svg>
             <input
-              type="text"
-              placeholder="아이디를 입력하세요."
+              type="email"
+              placeholder="이메일을 입력하세요."
               className="login-input__field"
               value={email}
               onChange={(e) => setEmail(e.target.value)}

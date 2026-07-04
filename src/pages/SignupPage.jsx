@@ -7,7 +7,6 @@ import './SignupPage.css';
 function SignupPage() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
-    userId: '',
     password: '',
     passwordConfirm: '',
     email: '',
@@ -18,7 +17,7 @@ function SignupPage() {
   };
 
   const handleSubmit = async () => {
-    if (!form.userId.trim() || !form.password || !form.passwordConfirm || !form.email.trim()) {
+    if (!form.password || !form.passwordConfirm || !form.email.trim()) {
       alert('모든 항목을 입력해 주세요!');
       return;
     }
@@ -44,20 +43,6 @@ function SignupPage() {
         <div className="signup-card__title">회원가입</div>
 
         <div className="signup-card__inputs">
-          <div className="signup-input">
-            <svg className="signup-input__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-              <circle cx="12" cy="7" r="4" />
-            </svg>
-            <input
-              type="text"
-              placeholder="사용하실 아이디를 입력하세요."
-              value={form.userId}
-              onChange={handleChange('userId')}
-              className="signup-input__field"
-            />
-          </div>
-
           <div className="signup-input">
             <svg className="signup-input__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="5" width="18" height="14" rx="2" />
