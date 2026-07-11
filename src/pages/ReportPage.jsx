@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import { createPost } from '../api/community';
 import './ReportPage.css';
 
 const REPORT_TYPES = [
@@ -16,6 +17,27 @@ function ReportPage() {
   const fileInputRef = useRef(null);
   const [linkInput, setLinkInput] = useState('');
   const [selectedType, setSelectedType] = useState(currentType);
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async () => {
+    if (!linkInput.trim()) {
+      alert('링크 정보를 입력해 주세요!');
+      return;
+    }
+
+    const typeInfo = REPORT_TYPES.find((t) => t.id === selectedType);
+
+    try {
+      setSubmitting(true);
+      await createPost(`[${typeInfo.title}] 제보`, linkInput);
+      alert('제보가 안전하게 접수되었습니다.');
+      navigate('/');
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="page-viewport page-viewport--page-bg">
@@ -78,12 +100,10 @@ function ReportPage() {
           <div className="report-page__submit-row">
             <button
               className="report-page__submit-btn"
-              onClick={() => {
-                alert('제보가 안전하게 접수되었습니다.');
-                navigate('/');
-              }}
+              onClick={handleSubmit}
+              disabled={submitting}
             >
-              제보 등록하기
+              {submitting ? '등록 중...' : '제보 등록하기'}
             </button>
           </div>
         </div>

@@ -57,7 +57,7 @@
 }
 
 .report-main-page__card:hover {
-  border-color: var(--color-accent-cyan);
+  border-color: var(--color-primary);
   transform: translateY(-10px);
 }
 

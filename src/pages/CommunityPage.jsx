@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import { createPost, getPosts, createComment, getComments } from '../api/community';
 import './CommunityPage.css';
 
 function CommunityPage() {
@@ -11,13 +12,11 @@ function CommunityPage() {
 
   const [selectedPost, setSelectedPost] = useState(null);
   const [commentInput, setCommentInput] = useState('');
-  const [postComments, setPostComments] = useState({
-    1: [
-      { id: 1, author: '보안전문가', text: '이런 수법 진짜 조심해야 합니다. 부모님들이 당하기 딱 좋은 포맷이네요.', time: '1시간 전' },
-      { id: 2, author: '클린인터넷', text: 'Trusty로 검증하는 습관 필수입니다!', time: '40분 전' },
-    ],
-    2: [],
-  });
+  const [postComments, setPostComments] = useState({});
+  const [titleInput, setTitleInput] = useState('');
+  const [inputText, setInputText] = useState('');
+  const [attachedFile, setAttachedFile] = useState(null);
+  const [groupPosts, setGroupPosts] = useState([]);
 
   useEffect(() => {
     if (location.state?.fromNavbar) {
@@ -26,31 +25,17 @@ function CommunityPage() {
     }
   }, [location.state]);
 
-  const [inputText, setInputText] = useState('');
-  const [groupPosts, setGroupPosts] = useState([
-    {
-      id: 1,
-      name: '피싱헌터',
-      handle: '@phishing_hunter',
-      time: '6월 29일',
-      content:
-        '엄마 프사 해놓고 액정 깨졌다고 접근하는 신종 카톡 사칭 피싱 대화 내용 공유합니다. 다들 부모님께 공유해서 절대 속지 말라고 하세요!!',
-      hasChat: true,
-      likeCount: 42000,
-      liked: false,
-    },
-    {
-      id: 2,
-      name: '화이트해커',
-      handle: '@whitehat_korea',
-      time: '25분 전',
-      content:
-        "방금 '국민건강보험 공단' 사칭해서 건강검진 환급금 신청하라는 메세지 받았는데 다들 조심하세요!! 주소 대놓고 이상하네요 ㄷㄷ Trusty 조회해보니까 발신자 신뢰도 최하위권에 위험 도메인으로 확인됩니다.",
-      hasChat: false,
-      likeCount: 340,
-      liked: false,
-    },
-  ]);
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const data = await getPosts();
+        setGroupPosts(data);
+      } catch (err) {
+        console.error('게시글 목록 조회 실패:', err);
+      }
+    };
+    fetchPosts();
+  }, []);
 
   const mockNews = [
     {
@@ -78,64 +63,47 @@ function CommunityPage() {
     { id: 1, title: '010-XXXX-XXXX 번호로 온 해외 결제 문자 의심 제보', status: '위험(분석완료)', date: '2026-06-28', type: 'summary', text: '해외결제 문자 사칭 사기 기록 데이터 내용' },
   ];
 
-  const handlePostSubmit = () => {
-    if (!inputText.trim()) {
-      alert('내용을 입력해주세요!');
+  const handlePostSubmit = async () => {
+    if (!titleInput.trim() || !inputText.trim()) {
+      alert('제목과 내용을 모두 입력해주세요!');
       return;
     }
-    const newId = Date.now();
-    const newPost = {
-      id: newId,
-      name: '나의 계정',
-      handle: '@my_trusty_account',
-      time: '방금 전',
-      content: inputText,
-      hasChat: false,
-      likeCount: 0,
-      liked: false,
-    };
-    setGroupPosts([newPost, ...groupPosts]);
-    setPostComments({ ...postComments, [newId]: [] });
-    setInputText('');
+    try {
+      const newPost = await createPost(titleInput, inputText, attachedFile);
+      setGroupPosts([newPost, ...groupPosts]);
+      setTitleInput('');
+      setInputText('');
+      setAttachedFile(null);
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
-  const handleLikeToggle = (id, e) => {
-    if (e) e.stopPropagation();
-    setGroupPosts(
-      groupPosts.map((post) => {
-        if (post.id === id) {
-          const updatedPost = {
-            ...post,
-            liked: !post.liked,
-            likeCount: post.liked ? post.likeCount - 1 : post.likeCount + 1,
-          };
-          if (selectedPost && selectedPost.id === id) {
-            setSelectedPost(updatedPost);
-          }
-          return updatedPost;
-        }
-        return post;
-      })
-    );
+  const handlePostClick = async (post) => {
+    setSelectedPost(post);
+    try {
+      const comments = await getComments(post.id);
+      setPostComments((prev) => ({ ...prev, [post.id]: comments }));
+    } catch (err) {
+      console.error('댓글 조회 실패:', err);
+    }
   };
 
-  const handleCommentSubmit = (postId) => {
+  const handleCommentSubmit = async (postId) => {
     if (!commentInput.trim()) {
       alert('댓글 내용을 입력해주세요!');
       return;
     }
-    const newComment = {
-      id: Date.now(),
-      author: '나의 계정',
-      text: commentInput,
-      time: '방금 전',
-    };
-
-    setPostComments({
-      ...postComments,
-      [postId]: [...(postComments[postId] || []), newComment],
-    });
-    setCommentInput('');
+    try {
+      const newComment = await createComment(postId, commentInput);
+      setPostComments({
+        ...postComments,
+        [postId]: [...(postComments[postId] || []), newComment],
+      });
+      setCommentInput('');
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   const handleReportClick = (item) => {
@@ -144,13 +112,6 @@ function CommunityPage() {
     } else {
       navigate('/analysis/summary', { state: { text: item.text } });
     }
-  };
-
-  const formatLikeCount = (count) => {
-    if (count >= 10000) {
-      return `${(count / 10000).toFixed(1)}만`;
-    }
-    return count.toLocaleString();
   };
 
   const renderTabContent = () => {
@@ -166,34 +127,16 @@ function CommunityPage() {
 
               <div className="community-page__detail-card">
                 <div className="community-page__post-meta">
-                  <span className="community-page__post-author">{selectedPost.name}</span>
-                  <span className="community-page__post-handle">{selectedPost.handle}</span>
-                  <span className="community-page__post-handle">· {selectedPost.time}</span>
+                  <span className="community-page__post-author">{selectedPost.title}</span>
                 </div>
                 <div className="community-page__post-content community-page__post-content--detail">
                   {selectedPost.content}
                 </div>
-                {selectedPost.hasChat && (
-                  <div className="community-page__chat-mock">
-                    <div className="community-page__chat-bubble community-page__chat-bubble--left">
-                      엄마 나 폰 액정 깨져서 수리 맡겼어ㅠㅠ
-                    </div>
-                    <div className="community-page__chat-bubble community-page__chat-bubble--left">
-                      지금 임시폰이라 전화는 안돼 문자만 가능해
-                    </div>
-                    <div className="community-page__chat-bubble community-page__chat-bubble--right">
-                      아이구 어쩌다 그랬어 보험은 들어놨구?
-                    </div>
+                {selectedPost.attachment && (
+                  <div className="community-page__attachment">
+                    📎 첨부파일 있음
                   </div>
                 )}
-                <div className="community-page__post-footer">
-                  <span
-                    className={'community-page__like' + (selectedPost.liked ? ' community-page__like--active' : '')}
-                    onClick={() => handleLikeToggle(selectedPost.id)}
-                  >
-                    {selectedPost.liked ? '❤️' : '🖤'} 좋아요 {formatLikeCount(selectedPost.likeCount)}
-                  </span>
-                </div>
               </div>
 
               <div className="community-page__comment-board">
@@ -214,11 +157,7 @@ function CommunityPage() {
                 <div className="community-page__comment-list">
                   {currentComments.map((comment) => (
                     <div key={comment.id} className="community-page__comment">
-                      <div className="community-page__comment-meta">
-                        <span className="community-page__comment-author">{comment.author}</span>
-                        <span className="community-page__comment-time">{comment.time}</span>
-                      </div>
-                      <div className="community-page__comment-text">{comment.text}</div>
+                      <div className="community-page__comment-text">{comment.content}</div>
                     </div>
                   ))}
                   {currentComments.length === 0 && (
@@ -235,11 +174,30 @@ function CommunityPage() {
             <div className="community-page__composer">
               <input
                 type="text"
+                placeholder="제목을 입력하세요."
+                value={titleInput}
+                onChange={(e) => setTitleInput(e.target.value)}
+                className="community-page__composer-input"
+                style={{ marginBottom: '8px', fontWeight: 'bold' }}
+              />
+              <input
+                type="text"
                 placeholder="무슨 일이 일어나고 있나요? 이곳에 공유해 주세요."
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 className="community-page__composer-input"
               />
+              {attachedFile && (
+                <div style={{ fontSize: '13px', color: '#555', marginTop: '4px' }}>
+                  📎 {attachedFile.name}
+                  <span
+                    style={{ marginLeft: '8px', color: '#e00', cursor: 'pointer' }}
+                    onClick={() => setAttachedFile(null)}
+                  >
+                    취소
+                  </span>
+                </div>
+              )}
               <div className="community-page__composer-actions">
                 <button className="community-page__attach-btn" onClick={() => fileInputRef.current.click()}>
                   파일 첨부
@@ -249,7 +207,9 @@ function CommunityPage() {
                   ref={fileInputRef}
                   style={{ display: 'none' }}
                   onChange={(e) => {
-                    if (e.target.files[0]) alert(`${e.target.files[0].name} 파일 탑재 완료`);
+                    if (e.target.files[0]) {
+                      setAttachedFile(e.target.files[0]);
+                    }
                   }}
                 />
                 <button className="community-page__post-btn" onClick={handlePostSubmit}>
@@ -260,44 +220,17 @@ function CommunityPage() {
 
             <div className="community-page__post-list">
               {groupPosts.map((post) => (
-                <div key={post.id} className="community-page__post" onClick={() => setSelectedPost(post)}>
+                <div key={post.id} className="community-page__post" onClick={() => handlePostClick(post)}>
                   <div className="community-page__post-meta">
-                    <span className="community-page__post-author">{post.name}</span>
-                    <span className="community-page__post-handle">{post.handle}</span>
-                    <span className="community-page__post-handle">· {post.time}</span>
+                    <span className="community-page__post-author">{post.title}</span>
                   </div>
 
-                  <div
-                    className={
-                      'community-page__post-content' +
-                      (post.hasChat ? ' community-page__post-content--with-chat' : '')
-                    }
-                  >
+                  <div className="community-page__post-content">
                     {post.content}
                   </div>
-
-                  {post.hasChat && (
-                    <div className="community-page__chat-mock community-page__chat-mock--list">
-                      <div className="community-page__chat-bubble community-page__chat-bubble--left">
-                        엄마 나 폰 액정 깨져서 수리 맡겼어ㅠㅠ
-                      </div>
-                      <div className="community-page__chat-bubble community-page__chat-bubble--left">
-                        지금 임시폰이라 전화는 안돼 문자만 가능해
-                      </div>
-                      <div className="community-page__chat-bubble community-page__chat-bubble--right">
-                        아이구 어쩌다 그랬어 보험은 들어놨구?
-                      </div>
-                    </div>
+                  {post.attachment && (
+                    <div className="community-page__attachment">📎 첨부파일 있음</div>
                   )}
-
-                  <div className="community-page__post-footer">
-                    <span
-                      className={'community-page__like' + (post.liked ? ' community-page__like--active' : '')}
-                      onClick={(e) => handleLikeToggle(post.id, e)}
-                    >
-                      {post.liked ? '❤️' : '🖤'} 좋아요 {formatLikeCount(post.likeCount)}
-                    </span>
-                  </div>
                 </div>
               ))}
             </div>
@@ -362,12 +295,10 @@ function CommunityPage() {
     { id: 'my', label: 'MY' },
   ];
 
-  // 💡 사이드바 검색창에서 이동 가능한 페이지 목록
   const SITE_PAGES = [
     { label: '홈', path: '/' },
     { label: '분석하기 (텍스트 입력)', path: '/analysis/input' },
-    { label: '피싱 이력 조회', path: '/search-history' },
-    { label: '피싱 이력 상세 조회', path: '/lookup' },
+    { label: '피싱 이력 조회', path: '/lookup' },
     { label: '커뮤니티', path: '/community', state: { fromNavbar: true } },
     { label: '제보하기', path: '/report' },
     { label: '로그인', path: '/login' },

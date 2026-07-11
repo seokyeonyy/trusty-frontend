@@ -1,18 +1,29 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import { requestAnalysis } from '../api/analysis';
 import './MainAnalysisPage.css';
 
 function MainAnalysisPage() {
   const navigate = useNavigate();
   const [textInput, setTextInput] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
     if (!textInput.trim()) {
       alert('분석할 문자나 메일 내용을 입력해 주세요!');
       return;
     }
-    navigate('/analysis/result', { state: { text: textInput } });
+
+    try {
+      setLoading(true);
+      const result = await requestAnalysis(textInput);
+      navigate('/analysis/result', { state: { result } });
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -51,14 +62,16 @@ function MainAnalysisPage() {
 
           <div className="main-analysis-page__form-actions">
             <div className="main-analysis-page__analyze-btn" onClick={handleAnalyze}>
-              <span className="main-analysis-page__analyze-btn-text">분석하기</span>
+              <span className="main-analysis-page__analyze-btn-text">
+                {loading ? '분석 중...' : '분석하기'}
+              </span>
             </div>
           </div>
         </div>
 
         <div className="main-analysis-page__footer">
           <div className="main-analysis-page__footer-links">
-            <div className="main-analysis-page__footer-link" onClick={() => navigate('/search-history')}>
+            <div className="main-analysis-page__footer-link" onClick={() => navigate('/lookup')}>
               🔍 최근 피싱 블랙리스트 이력 조회하기
             </div>
             <div className="main-analysis-page__footer-link" onClick={() => navigate('/report')}>

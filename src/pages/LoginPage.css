@@ -52,7 +52,7 @@
   box-sizing: border-box;
 }
 
-.login-input--password {
+.login-input:focus-within {
   background: rgba(var(--blue-tint-rgb), 0.3);
   border: 1px solid var(--color-primary);
 }

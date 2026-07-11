@@ -11,17 +11,28 @@ function AnalysisInputPage() {
   const [error, setError] = useState('');
 
   const handleSubmit = async () => {
+    console.log("========== 분석 버튼 ==========");
     if (!inputText.trim()) {
       alert('분석할 내용을 입력해주세요.');
       return;
     }
-
+    console.log("입력 텍스트:", inputText);
     try {
       setLoading(true);
       setError('');
       const result = await requestAnalysis(inputText);
-      navigate('/analysis/result', { state: { result } });
+      console.log("분석 결과:", result);
+      navigate('/analysis/result', {
+        state: {
+          result
+        }
+      });
     } catch (err) {
+      console.error("분석 오류:", err);
+      if (err.response) {
+        console.log("status:", err.response.status);
+        console.log("data:", err.response.data);
+      }
       setError(err.message);
     } finally {
       setLoading(false);

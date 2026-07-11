@@ -13,7 +13,6 @@ import ReportPage from './pages/ReportPage'
 import CommunityPage from './pages/CommunityPage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
-import SearchHistoryPage from './pages/SearchHistoryPage'
 
 import './styles/index.css';
 import './styles/Layouts.css';
@@ -42,9 +41,6 @@ function App() {
         <Route path="/community" element={<CommunityPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
-
-        {/* 5. 상단 Navbar 네비게이션에서 연결되는 피싱 이력 조회 페이지 경로 */}
-        <Route path="/search-history" element={<SearchHistoryPage />} />
 
         <Route path="/main" element={<MainAnalysisPage />} />
       </Routes>

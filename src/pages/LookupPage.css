@@ -4,20 +4,20 @@
   width: var(--canvas-width);
   height: var(--canvas-height);
   position: relative;
-  background: var(--color-bg-white);
   overflow: hidden;
 }
-
-.lookup-page__search-bg {
-  width: 1054px;
-  height: 77px;
-  left: 207px;
-  top: 417px;
+.lookup-page__title {
+  width: 100%;
+  height: 90px;
+  left: 0;
+  top: 177px;
   position: absolute;
-  background: var(--tint-grey-soft);
-  border-radius: var(--radius-pill);
+  color: var(--color-text-primary);
+  font-size: var(--fs-4xl);
+  font-family: var(--font-primary);
+  font-weight: var(--fw-bold);
+  text-align: center;
 }
-
 .lookup-page__desc {
   width: 903px;
   height: 47px;
@@ -28,8 +28,8 @@
   font-size: var(--fs-lg);
   font-family: var(--font-primary);
   font-weight: var(--fw-regular);
+  text-align: center;
 }
-
 .lookup-page__field-label {
   width: 358px;
   height: 46px;
@@ -41,7 +41,21 @@
   font-family: var(--font-primary);
   font-weight: var(--fw-regular);
 }
-
+.lookup-page__input {
+  width: 1054px;
+  height: 77px;
+  left: 207px;
+  top: 417px;
+  position: absolute;
+  background: var(--tint-grey-soft);
+  border-radius: var(--radius-pill);
+  border: none;
+  outline: none;
+  padding: 0 35px;
+  box-sizing: border-box;
+  font-size: var(--fs-xl);
+  font-family: var(--font-primary);
+}
 .lookup-page__search-btn {
   width: 1054.75px;
   height: 77.48px;
@@ -51,32 +65,18 @@
   background: var(--gradient-primary);
   border-radius: var(--radius-pill);
   cursor: pointer;
-  box-shadow: var(--shadow-btn-primary);
   display: flex;
   justify-content: center;
   align-items: center;
+  box-shadow: var(--shadow-btn-primary);
 }
-
 .lookup-page__search-btn-text {
   color: var(--color-bg-white);
   font-size: var(--fs-2xl);
   font-family: var(--font-primary);
   font-weight: var(--fw-bold);
-  pointer-events: none;
+  user-select: none;
 }
-
-.lookup-page__title {
-  width: 503px;
-  height: 90px;
-  left: 540px;
-  top: 177px;
-  position: absolute;
-  color: var(--color-text-primary);
-  font-size: var(--fs-4xl);
-  font-family: var(--font-primary);
-  font-weight: var(--fw-bold);
-}
-
 .lookup-page__hint {
   width: 447px;
   height: 52px;
@@ -87,85 +87,51 @@
   font-size: var(--fs-4xl);
   font-family: var(--font-primary);
   font-weight: var(--fw-regular);
+  text-align: center;
 }
-
-.lookup-page__results {
+.lookup-page__list {
   width: 1267px;
-  height: 228px;
-  left: 58px;
+  left: 86px;
   top: 796px;
   position: absolute;
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
   gap: 17px;
 }
-
-.lookup-page__result-row {
-  align-self: stretch;
+.lookup-page__row {
+  width: 100%;
   height: 80px;
   background: rgba(var(--blue-tint-rgb), 0.8);
   border-radius: var(--radius-pill);
+  display: flex;
+  align-items: center;
+  padding: 0 50px;
+  box-sizing: border-box;
 }
-
-.lookup-page__result-target {
-  height: 24px;
-  position: absolute;
+.lookup-page__row-target {
+  width: 300px;
   color: var(--color-text-primary);
-  font-size: var(--fs-2xl);
+  font-size: var(--fs-xl);
   font-family: var(--font-primary);
-  font-weight: var(--fw-regular);
+  font-weight: 500;
 }
-
-.lookup-page__result-target--1 {
-  width: 210px;
-  left: 127px;
-  top: 30px;
-}
-
-.lookup-page__result-target--2 {
-  width: 171px;
-  left: 132px;
-  top: 122px;
-}
-
-.lookup-page__result-status {
-  width: 137px;
-  height: 24px;
-  left: 384px;
-  position: absolute;
-  font-size: var(--fs-2xl);
+.lookup-page__row-status {
+  width: 200px;
+  font-size: var(--fs-xl);
   font-family: var(--font-primary);
-  font-weight: var(--fw-regular);
+  font-weight: var(--fw-bold);
 }
-
-.lookup-page__result-status--danger {
-  top: 33px;
+.lookup-page__row-status--danger {
   color: var(--color-danger-strong);
 }
-
-.lookup-page__result-status--safe {
-  top: 121px;
+.lookup-page__row-status--safe {
   color: var(--color-success);
 }
-
-.lookup-page__result-detail {
-  width: 107px;
-  height: 19px;
-  left: 964px;
-  position: absolute;
+.lookup-page__row-detail {
+  margin-left: auto;
   color: var(--color-accent-orange);
-  font-size: var(--fs-2xl);
+  font-size: var(--fs-xl);
   font-family: var(--font-primary);
-  font-weight: var(--fw-regular);
+  font-weight: 600;
   cursor: pointer;
-}
-
-.lookup-page__result-detail--1 {
-  top: 33px;
-}
-
-.lookup-page__result-detail--2 {
-  top: 121px;
 }

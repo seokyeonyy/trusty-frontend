@@ -1,17 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { getMe, logout } from '../api/auth';
 import './Navbar.css';
 
 const MENU_ITEMS = [
   { label: '홈', to: '/' },
   { label: '제보창', to: '/report' },
   { label: '커뮤니티창', to: '/community', state: { fromNavbar: true } },
-  { label: '피싱 이력 조회', to: '/search-history' },
+  { label: '피싱 이력 조회', to: '/lookup' },
 ];
 
 function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [userEmail, setUserEmail] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      setUserEmail(null);
+      return;
+    }
+    getMe()
+      .then((data) => setUserEmail(data.email))
+      .catch(() => setUserEmail(null));
+  }, [location.pathname]);
+
+  const handleLogout = () => {
+    logout();
+    setUserEmail(null);
+    navigate('/login');
+  };
 
   return (
     <div className="navbar">
@@ -30,9 +49,16 @@ function Navbar() {
           </div>
         ))}
 
-        <div className="navbar__login" onClick={() => navigate('/login')}>
-          <span className="navbar__login-text">로그인</span>
-          <span className="navbar__login-arrow" aria-hidden="true">➔</span>
+        <div className="navbar__login" onClick={userEmail ? handleLogout : () => navigate('/login')}>
+          <div>
+            <span className="navbar__login-text">{userEmail ? '로그아웃' : '로그인'}</span>
+            {!userEmail && <span className="navbar__login-arrow" aria-hidden="true">➔</span>}
+            {userEmail && (
+              <div style={{ fontSize: '11px', color: '#888', marginTop: '2px' }}>
+                {userEmail}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
