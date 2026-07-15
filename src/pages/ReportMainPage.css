@@ -1,0 +1,84 @@
+@import '../styles/tokens.css';
+
+.report-main-page {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--color-bg-white);
+  position: relative;
+}
+
+.report-main-page__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px;
+  padding-top: 140px; /* Navbar 높이만큼 여유 확보 */
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.report-main-page__title {
+  font-size: var(--fs-5xl);
+  font-weight: var(--fw-black);
+  color: var(--color-text-primary);
+  font-family: var(--font-primary);
+  margin: 0 0 16px 0;
+}
+
+.report-main-page__desc {
+  font-size: var(--fs-lg);
+  color: var(--color-text-body);
+  font-family: var(--font-primary);
+  max-width: 780px;
+  margin: 0 auto 50px auto;
+  line-height: 1.6;
+}
+
+.report-main-page__cards {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.report-main-page__card {
+  width: 350px;
+  height: 300px;
+  background: var(--color-neutral-card-bg);
+  border-radius: var(--radius-pill);
+  border: 2px solid transparent;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  cursor: pointer;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.report-main-page__card:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-10px);
+}
+
+.report-main-page__card-icon {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: var(--color-text-heading-alt);
+}
+
+.report-main-page__card-title {
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-primary);
+  font-family: var(--font-primary);
+  margin-bottom: 15px;
+}
+
+.report-main-page__card-desc {
+  font-size: var(--fs-base);
+  color: var(--color-text-body);
+  font-family: var(--font-primary);
+  padding: 0 10px;
+  line-height: 1.5;
+}

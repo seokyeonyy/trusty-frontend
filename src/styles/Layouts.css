@@ -1,0 +1,128 @@
+@import './tokens.css';
+
+/* ============================================================
+   Page shell
+   Two shell patterns exist in the original code:
+   1) .page-canvas--fixed   → page renders the 1440x1024 frame
+                              directly (LoginPage, AnalysisInputPage,
+                              LookupPage, ReportMainPage).
+   2) .page-viewport + .page-canvas → outer full-width flex
+                              centering wrapper around the 1440x1024
+                              frame (MainAnalysisPage, ReportPage,
+                              AnalysisResultPage/SummaryPage,
+                              SearchHistoryPage, CommunityPage).
+   This inconsistency already existed in the original files; it is
+   preserved here rather than "fixed" so the rendered result does
+   not change. Each page picks the variant it already used.
+   ============================================================ */
+
+.page-viewport {
+  width: 100%;
+  min-height: var(--canvas-height);
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.page-viewport--page-bg {
+  background: var(--color-bg-page);
+}
+
+.page-viewport--white-bg {
+  background: var(--color-bg-white);
+}
+
+.page-canvas {
+  width: var(--canvas-width);
+  height: var(--canvas-height);
+  position: relative;
+  overflow: hidden;
+  background: var(--color-bg-white);
+}
+
+.page-canvas--fixed {
+  position: relative;
+}
+
+/* ============================================================
+   Buttons
+   ============================================================ */
+
+.btn-gradient {
+  background: var(--gradient-primary);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--color-bg-white);
+  font-family: var(--font-primary);
+  font-weight: var(--fw-bold);
+  box-shadow: var(--shadow-btn-primary);
+  border: none;
+}
+
+.btn-secondary-tag {
+  background: var(--color-primary);
+  color: var(--color-bg-white);
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: var(--fw-bold);
+  cursor: pointer;
+  box-shadow: var(--shadow-btn-primary-tag);
+}
+
+.btn-muted-tag {
+  background: var(--color-text-secondary);
+  color: var(--color-bg-white);
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: var(--fw-bold);
+  cursor: pointer;
+  box-shadow: var(--shadow-btn-secondary);
+}
+
+/* ============================================================
+   Cards / panels
+   ============================================================ */
+
+.panel {
+  background: var(--color-bg-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg-xl);
+  box-shadow: var(--shadow-card);
+  box-sizing: border-box;
+}
+
+.panel-soft {
+  background: var(--color-bg-page);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg-xl);
+  box-sizing: border-box;
+}
+
+.pill-tint {
+  background: var(--tint-blue-strong);
+  border-radius: var(--radius-pill);
+}
+
+/* ============================================================
+   Badges
+   ============================================================ */
+
+.badge {
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-bold);
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+}
+
+.badge--danger {
+  background: var(--tint-danger-soft);
+  color: var(--color-danger);
+}
+
+.badge--success {
+  background: var(--tint-success-soft);
+  color: var(--color-success);
+}
