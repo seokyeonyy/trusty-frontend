@@ -9,4 +9,8 @@ export default function ScrollToTop() {
   }, [pathname]);
 
   return null;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 54ef5e0f53c314a96c0f300fe92d037a1f47eb32
