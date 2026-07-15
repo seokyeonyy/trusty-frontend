@@ -6,7 +6,6 @@ export async function signup(email, password) {
   return res.data;
 }
 
-<<<<<<< HEAD
 // src/api/auth.js 수정
 export async function login(email, password) {
   // 1. FormData 객체 생성
@@ -21,10 +20,6 @@ export async function login(email, password) {
     },
   });
   
-=======
-export async function login(email, password) {
-  const res = await client.post('/auth/login', { email, password });
->>>>>>> 54ef5e0f53c314a96c0f300fe92d037a1f47eb32
   setToken(res.data.access_token);
   return res.data;
 }
